@@ -88,6 +88,17 @@ var dessertCategories = function(desserts) {
 // movies that came out between 1990 and 2000.
 // TIP: use an array as your accumulator - don't push to an external array!
 var ninetiesKid = function(movies) {
+  moviesInRange = [];
+  return _.reduce(movies, function(moviesInRange, movie) {
+    if (!Array.isArray(moviesInRange)) {
+      moviesInRange = [];
+    }
+    if (movie.releaseYear >= 1990 && movie.releaseYear < 2000) {
+      moviesInRange.push(movie.title);
+    }
+    return moviesInRange;
+
+  });
 
 };
 
@@ -95,6 +106,20 @@ var ninetiesKid = function(movies) {
 // runtime than your time limit.
 // timeLimit is an integer representing a number of minutes.
 var movieNight = function(movies, timeLimit) {
+  return _.reduce(movies, function (shortEnough, movie) {
+    if (shortEnough !== true && shortEnough !== false) {
+      shortEnough = false;
+    }
+    if (shortEnough) {
+      return shortEnough;
+    }
+    if (movie.runtime < timeLimit) {
+      shortEnough = true;
+    }
+    return shortEnough;
+
+  });
+
 
 };
 
@@ -148,7 +173,15 @@ var glutenFree = function(desserts) {
 */
 var applyCoupon = function(groceries, coupon) {
   return _.map(groceries, function(grocery) {
-    grocery.salePrice = '$' + (parseFloat(grocery.price.slice(1)) * (1 - coupon));
+    grocery.salePrice = Math.floor((parseFloat(grocery.price.slice(1)) * (1 - coupon)) * 100) / 100;
+
+    if (grocery.salePrice - (parseFloat(grocery.price.slice(1)) * (1 - coupon)) < 0.005) {
+      grocery.salePrice = '$' + grocery.salePrice;
+    } else {
+      grocery.salePrice =
+      Math.ceil((parseFloat(grocery.price.slice(1)) * (1 - coupon)) * 100) / 100;
+      grocery.salePrice = '$' + grocery.salePrice;
+    }
     return grocery;
   });
 
